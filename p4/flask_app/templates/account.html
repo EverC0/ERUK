@@ -1,0 +1,76 @@
+{% extends "header.html" %}
+{% block content %}
+<div class="container mx-auto w-full md:w-2/3 lg:w-1/3">
+    {% if image %}
+        {# Profile picture #}
+        <img class="rounded-2xl h-24 w-24" src="data:image/png;base64,{{image}}" alt="image">
+    {% endif %}
+
+    {# TODO: Greeting (must include the current user's username) #}
+    <!-- we must greet but what is the current user value_name? -->
+    <h2 class="text-2xl">Hello, {{ current_user.username }}!</h2>
+
+</div>
+
+<!-- note so were given the forms to update
+    both usernanme and profile picture
+    we must go into forms.py and create
+    two new forms for each of these   
+    # note if picture doeesn't exist ass profile picture
+    # 2 if a picture already exist just replace it in the db 
+    # then disply users current prfile picture
+    #  Add a link to view all of the user's reviews -> user_detail(username)
+
+    # Read the templates to see what arguments to pass in when calling render_template()
+-->
+
+<div class="container mx-auto w-full md:w-2/3 lg:w-1/3">
+    <h3 class="text-xl">
+        Update Username
+    </h3>
+    <form class="review-form" method="POST" action="">
+        {{ update_username_form.csrf_token }}
+        <div class="form-group">
+            {{ update_username_form.username.label }}
+            {{ update_username_form.username(class="form-content") }}
+            {% if update_username_form.username.errors %}
+            <div class="error" role="alert">
+                {% for error in update_username_form.username.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {{ update_username_form.submit_username(class="review-button") }}
+    </form>
+</div>
+
+<div class="container mx-auto w-full md:w-2/3 lg:w-1/3">
+    <h3 class="text-xl">
+        Update Profile Picture
+    </h3>
+    <form class="review-form" method="POST" action="" enctype="multipart/form-data">
+        {{ update_profile_pic_form.csrf_token }}
+        <div class="form-group">
+            {{ update_profile_pic_form.picture.label }}
+            {{ update_profile_pic_form.picture(class="form-content") }}
+            {% if update_profile_pic_form.picture.errors %}
+            <div class="error" role="alert">
+                {% for error in update_profile_pic_form.picture.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {{ update_profile_pic_form.submit_picture(class="review-button") }}
+    </form>
+</div>
+
+<div class="flex justify-center">
+    {# TODO: Link to see all of the current user's reviews. #}
+    <a href="{{ url_for('ok.user_detail', username=current_user.username) }}">
+        View My Reviews
+      </a>
+      
+</div>
+{% endblock %}

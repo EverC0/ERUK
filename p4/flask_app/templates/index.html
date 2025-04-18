@@ -1,0 +1,32 @@
+<!-- Search post based on genre
+ 
+    Search post by Topic
+  - have three buttons 
+    - one for each genre
+    - when clicked, it will send a post request to the server with the genre as a parameter
+    - the server will then return a list of posts that match the genre
+    - the list of posts will be displayed on the 
+    Three genres will be "outdoor", "sports", "cuisines"
+-->
+
+{% extends "header.html" %} {% block content %}
+<div class="main-container">
+  <div class="decoration-main-container"><div class="decoration-main"></div></div>
+  <h2 class="main-title"> Search a movie </h2>
+
+  <form class="searchbar" action="/" method="POST">
+    {{ form.csrf_token }}
+    {{ form.search_query(class="form-control", placeholder="movie name") }}
+
+    {% if form.search_query.errors %}
+      <div class="error" role="alert">
+        {% for error in form.search_query.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    {{ form.submit(class="form-button") }}
+  </form>
+</div>
+{% endblock %}
