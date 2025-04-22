@@ -27,11 +27,10 @@ class User(db.Document, UserMixin):
 # TODO: implement fields
 # instead of reviews will change this to user posts
 
-class Review(db.Document):
-    commenter = ReferenceField(User, required=True)
+# Rename Review -> Post
+class Post(db.Document):
+    author = ReferenceField(User, required=True)
     content = StringField(required=True, min_length=5, max_length=500)
-    date = StringField(required=True, default=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    imdb_id = StringField(required=True, min_length=9, max_length=9)
-    movie_title = StringField(required=True, min_length=1, max_length=100)
-    # image = db.StringField()
-    #Uncomment when other fields are ready for review pictures
+    category = StringField(required=True, choices=["sports", "news", "entertainment"])  # New field
+    image = ImageField()  # Replace movie poster with user-uploaded image
+    date = StringField(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
