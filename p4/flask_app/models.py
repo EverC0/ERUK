@@ -1,9 +1,9 @@
 from flask_login import UserMixin
 from datetime import datetime
-from . import db, login_manager
+# from . import db, login_manager
 from flask_login import UserMixin
 from datetime import datetime
-from . import db, login_manager
+from .extensions import db, login_manager
 from mongoengine import StringField, ReferenceField, EmailField, ImageField
 # from mongoengine import FileField as MongoFileField
 

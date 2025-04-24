@@ -4,7 +4,10 @@ from flask_login import current_user
 from ..forms import PostForm, SearchForm  # Changed form
 from ..models import User, Post  # Changed model
 from ..utils import current_time
-from .. import s3_client  # Add AWS S3 client import
+from ..aws import upload_file  # ✅
+from flask_login import login_required
+
+
 
 posts = Blueprint("posts", __name__)
 
@@ -41,7 +44,7 @@ def create_post():
         # Handle image upload to S3
         image_url = None
         if form.image.data:
-            image_url = s3_client.upload_file(form.image.data)
+            image_url = upload_file(form.image.data)
             
         new_post = Post(
             author=current_user._get_current_object(),
