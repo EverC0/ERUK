@@ -21,23 +21,23 @@ class SearchForm(FlaskForm):
     )
     submit = SubmitField("Search")
 
-# Create or edit a post
+
 class PostForm(FlaskForm):
-    content = TextAreaField("Post Content", validators=[InputRequired(), Length(min=5, max=500)])
-    category = SelectField("Category", choices=[
-        ("sports", "Sports"), 
-        ("news", "News"), 
-        ("entertainment", "Entertainment")
-    ], validators=[InputRequired()])
-    image = FileField("Upload Image", validators=[
-        FileAllowed(['jpg', 'png', 'jpeg'], 'Images Only!')
-    ])
+    content = StringField("Title", validators=[InputRequired(), Length(min=5, max=500)])
+    category = SelectField(
+        "Category",
+        choices=[("sports", "Sports"), ("news", "News"), ("entertainment", "Entertainment")],
+        validators=[InputRequired()]
+    )
+    image = FileField("Upload Image", validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField("Create Post")
+
 
 # Comment on a post
 class CommentForm(FlaskForm):
-    content = TextAreaField("Comment", validators=[InputRequired(), Length(min=1, max=500)])
-    submit = SubmitField("Comment")
+    content = StringField("Add a Comment", validators=[InputRequired(), Length(min=1, max=500)])
+    submit = SubmitField("Post Comment")
+
 
 class RegistrationForm(FlaskForm):
     username = StringField(

@@ -27,10 +27,24 @@ class User(db.Document, UserMixin):
 # TODO: implement fields
 # instead of reviews will change this to user posts
 
-# Rename Review -> Post
+# Rename Review to Post_comments for posts 
+# class Review(db.Document):
+#     commenter = ReferenceField(User, required=True)
+#     content = StringField(required=True, min_length=5, max_length=500)
+#     date = StringField(required=True, default=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+#     imdb_id = StringField(required=True, min_length=9, max_length=9)
+#     movie_title = StringField(required=True, min_length=1, max_length=100)
+
+class PostComment(db.Document):
+    commenter = ReferenceField("User", required=True)  # who made the comment
+    post = ReferenceField("Post", required=True)        # what Post the comment belongs to
+    content = StringField(required=True, min_length=1, max_length=500)
+    date = StringField(default=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+
 class Post(db.Document):
-    author = ReferenceField(User, required=True)
+    author = ReferenceField("User", required=True)
     content = StringField(required=True, min_length=5, max_length=500)
     category = StringField(required=True, choices=["sports", "news", "entertainment"])  # New field
     image = ImageField()  # Replace movie poster with user-uploaded image
-    date = StringField(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    date = StringField(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))    

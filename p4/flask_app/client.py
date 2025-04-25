@@ -1,7 +1,16 @@
 from mongoengine.queryset.visitor import Q
 from .models import Post
 
+# class Post(db.Document):
+#     author = ReferenceField(User, required=True)
+#     content = StringField(required=True, min_length=5, max_length=500)
+#     category = StringField(required=True, choices=["sports", "news", "entertainment"])  # New field
+#     image = ImageField()  # Replace movie poster with user-uploaded image
+#     date = StringField(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+#     Unique ID = 
+
 class PostClient:
+    # mongodb connection and create a session
     """
     Client for interacting with Post objects in the database.
     Replaces the MovieClient that was used for OMDB API.

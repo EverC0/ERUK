@@ -1,0 +1,71 @@
+{% extends "header.html" %}
+{% block content %}
+
+<div class="container mx-auto w-full md:w-2/3 lg:w-1/3 mt-10">
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    
+    <!-- Post Title -->
+    <h2 class="text-2xl font-bold mb-2 text-center">{{ post.content }}</h2>
+
+    <!-- Meta Info -->
+    <p class="text-sm text-gray-600 text-center mb-4">
+      Category: <span class="font-semibold">{{ post.category|capitalize }}</span> |
+      Posted by <span class="text-blue-600">@{{ post.author.username }}</span> |
+      <span>{{ post.date }}</span>
+    </p>
+
+    <!-- Post Image -->
+    {% if post.image %}
+      <div class="flex justify-center my-4">
+        <img 
+          src="{{ url_for('posts.serve_image', post_id=post.id) }}" 
+          alt="Post Image" 
+          class="rounded shadow-lg max-h-[400px]"
+        >
+      </div>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <h3 class="text-xl font-semibold mt-6 mb-2">Comments ({{ comments|length }})</h3>
+
+    {% if comments %}
+      {% for comment in comments %}
+        <div class="border p-2 my-2 rounded">
+          <p class="text-sm text-gray-600">{{ comment.commenter.username }} said:</p>
+          <p>{{ comment.content }}</p>
+          <p class="text-xs text-gray-400">{{ comment.date }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-gray-500">No comments yet. Be the first to reply!</p>
+    {% endif %}
+
+    <!-- Comment Form -->
+    {% if current_user.is_authenticated %}
+      <div class="mt-6">
+        <form method="POST" action="" class="comment-form">
+          {{ comment_form.csrf_token }}
+          <div class="form-group mb-4">
+            {{ comment_form.content.label(class="block text-sm font-medium text-gray-700") }}
+            {{ comment_form.content(class="form-content w-full p-2 border rounded") }}
+            {% if comment_form.content.errors %}
+              <div class="error text-red-500 text-sm mt-1" role="alert">
+                {% for error in comment_form.content.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div class="form-group text-center">
+            {{ comment_form.submit(class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700") }}
+          </div>
+        </form>
+      </div>
+    {% else %}
+      <p class="text-center mt-4 text-gray-600 italic">Login to leave a comment.</p>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}
