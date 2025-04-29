@@ -1,32 +1,23 @@
-<!-- Search post based on genre
- 
-    Search post by Topic
-  - have three buttons 
-    - one for each genre
-    - when clicked, it will send a post request to the server with the genre as a parameter
-    - the server will then return a list of posts that match the genre
-    - the list of posts will be displayed on the 
-    Three genres will be "outdoor", "sports", "cuisines"
--->
-
-{% extends "header.html" %} {% block content %}
+{% extends "header.html" %} 
+{% block content %}
 <div class="main-container">
   <div class="decoration-main-container"><div class="decoration-main"></div></div>
-  <h2 class="main-title"> Search a movie </h2>
+  <h2 class="main-title">Discover Posts by Category</h2>
 
-  <form class="searchbar" action="/" method="POST">
-    {{ form.csrf_token }}
-    {{ form.search_query(class="form-control", placeholder="movie name") }}
-
-    {% if form.search_query.errors %}
-      <div class="error" role="alert">
-        {% for error in form.search_query.errors %}
-          <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-    {% endif %}
-    
-    {{ form.submit(class="form-button") }}
-  </form>
+  <!-- Category buttons with styling similar to Login/Register -->
+  <div class="flex justify-center my-8 gap-8">
+    <a href="{{ url_for('posts.category_posts', category='sports') }}" 
+       class="my-5 mr-5 ml-0 navlink bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-full">
+      Sports
+    </a>
+    <a href="{{ url_for('posts.category_posts', category='news') }}" 
+       class="my-5 mr-5 ml-0 navlink bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-full">
+      News
+    </a>
+    <a href="{{ url_for('posts.category_posts', category='entertainment') }}" 
+       class="my-5 mr-5 ml-0 navlink bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-full">
+      Entertainment
+    </a>
+  </div>
 </div>
 {% endblock %}

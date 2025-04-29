@@ -34,3 +34,9 @@ class Post(db.Document):
     category = StringField(required=True, choices=["sports", "news", "entertainment"])  # New field
     image = ImageField()  # Replace movie poster with user-uploaded image
     date = StringField(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+class Comment(db.Document):
+    post = ReferenceField(Post, required=True)
+    commenter = ReferenceField(User, required=True)
+    content = StringField(required=True, min_length=1, max_length=500)
+    date = StringField(default=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

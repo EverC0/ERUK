@@ -1,7 +1,64 @@
-<html>
-
-
-<head>
-    <title>User Post</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</html>
+{% extends "header.html" %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <h1 class="text-3xl font-bold text-center mb-8">Create New Post</h1>
+  
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="p-6">
+      <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+            Category
+          </label>
+          {{ form.category(class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+          {% if form.category.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.category.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="content">
+            Post Content
+          </label>
+          {{ form.content(class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", rows=6) }}
+          {% if form.content.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.content.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="image">
+            Image (Optional)
+          </label>
+          {{ form.image(class="w-full px-3 py-2 border rounded-lg focus:outline-none") }}
+          {% if form.image.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.image.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+          <p class="text-gray-500 text-xs mt-1">Allowed file types: jpg, png, jpeg</p>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          {{ form.submit(class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none") }}
+          <a href="{{ url_for('posts.index') }}" class="text-blue-500 hover:underline">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
