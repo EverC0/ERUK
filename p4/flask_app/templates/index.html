@@ -2,6 +2,7 @@
 {% block content %}
 <div class="main-container">
   <div class="decoration-main-container"><div class="decoration-main"></div></div>
+<<<<<<< HEAD
   <h2 class="main-title">Discover Posts by Category</h2>
 
   <!-- Category buttons with styling similar to Login/Register -->
@@ -19,5 +20,24 @@
       Entertainment
     </a>
   </div>
+=======
+  <h2 class="main-title"> Search Post by Genre </h2>
+
+  <!-- three buttons or drop down menu for the three genres -->
+  <form class="searchbar" action="/" method="POST">
+    {{ form.csrf_token }}
+    {{ form.search_query(class="form-control", placeholder="movie name") }}
+
+    {% if form.search_query.errors %}
+      <div class="error" role="alert">
+        {% for error in form.search_query.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    {{ form.submit(class="form-button") }}
+  </form>
+>>>>>>> a0997d9a870d24891f1182c64ee02a777f4e41e9
 </div>
 {% endblock %}
