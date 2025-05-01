@@ -7,6 +7,8 @@ from .. import post_client
 from ..forms import PostForm, CommentForm, SearchForm
 from ..models import User, Post, Comment
 from ..utils import current_time
+from flask import send_file
+
 
 posts = Blueprint("posts", __name__)  # Make sure this is "posts" not "movies"
 
@@ -61,7 +63,7 @@ def create_post():
         flash("Post created successfully!", "success")
         return redirect(url_for("posts.index"))
     
-    return render_template("create_post.html", form=form)
+    return render_template("userPost.html", form=form)
 
 @posts.route("/post/<post_id>", methods=["GET", "POST"])
 def post_detail(post_id):
@@ -97,6 +99,19 @@ def post_detail(post_id):
         author_pic=author_pic
     )
 
+@posts.route("/post/<post_id>/image")
+def serve_image(post_id):
+    post = Post.objects.get_or_404(id=post_id)
+
+    if post.image:
+        return send_file(
+            io.BytesIO(post.image.read()),
+            mimetype=post.image.content_type
+        )
+    else:
+        return "No image found", 404
+
+
 @posts.route("/category/<category>")
 def category_posts(category):
     posts = post_client.get_posts_by_category(category)
@@ -109,13 +124,14 @@ def user_detail(username):
     if not user:
         return render_template("user_detail.html", error="User not found.")
     
-    posts = post_client.get_user_posts(user)
+    reviews = post_client.get_user_posts(user)  # renamed from 'posts'
     image = get_b64_img(username)
     
     return render_template(
         "user_detail.html", 
-        user=user, 
-        posts=posts, 
-        image=image, 
+        current_user=user,         # renamed from 'user'
+        reviews=reviews,           # renamed from 'posts'
+        image=image,
         error=None
     )
+
