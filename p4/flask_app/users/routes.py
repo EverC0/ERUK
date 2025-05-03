@@ -44,7 +44,7 @@ def register():
 def login():
 
     if current_user.is_authenticated:
-        return redirect(url_for("ok.index")) 
+        return redirect(url_for("posts.index")) 
     
     login_form = LoginForm()
     
@@ -66,7 +66,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("ok.index"))
+    return redirect(url_for("posts.index"))
 
 @users.route("/account", methods=["GET", "POST"])
 @login_required

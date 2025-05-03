@@ -2,7 +2,7 @@
 <nav class="navbar flex w-full justify-between z-40">
     <a class="m-5 navlink" href="{{ url_for('posts.index') }}">
         <!-- make our first span tag to be our search for post -->
-        <span class="hidden sm:block">movie-rater</span>
+        <span class="hidden sm:block">Home</span>
         <span class="block sm:hidden">Home</span>
     </a>
     {% if current_user.is_authenticated %}

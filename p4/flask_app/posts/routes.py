@@ -23,6 +23,19 @@ def get_b64_img(username):
             return None
     return None
 
+def get_b64_img_post(post_id):
+    """Return base64 encoded image for a post"""
+    try:
+        post = Post.objects.get(id=post_id)
+        if post and post.image:
+            bytes_im = io.BytesIO(post.image.read())
+            image = base64.b64encode(bytes_im.getvalue()).decode()
+            return image
+    except:
+        pass
+    return None
+
+
 @posts.route("/", methods=["GET", "POST"])
 def index():
     form = SearchForm()
@@ -115,7 +128,13 @@ def serve_image(post_id):
 @posts.route("/category/<category>")
 def category_posts(category):
     posts = post_client.get_posts_by_category(category)
-    return render_template("category.html", posts=posts, category=category)
+    return render_template(
+        "category.html", 
+        posts=posts, 
+        category=category,
+        get_b64_img=get_b64_img,  # The existing function for user profile pics
+        get_b64_img_post=get_b64_img_post  # Add this line
+    )
 
 @posts.route("/user/<username>")
 def user_detail(username):
