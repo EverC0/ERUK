@@ -7,17 +7,88 @@ from .. import bcrypt
 from werkzeug.utils import secure_filename
 from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm
 from ..models import User
+from flask_dance.consumer import oauth_authorized
+from flask import current_app
 
 users = Blueprint("users", __name__)
 
 """ ************ User Management views ************ """
 # login and register do nothing here for right now
 
+
+@users.route("/google-login")
+def google_login():
+    # Get the blueprint from the app context
+    google_bp = current_app.blueprints.get('google')
+    
+    if not google_bp.session.authorized:
+        return redirect(url_for("google.login"))
+    
+    # Use the blueprint's session
+    resp = google_bp.session.get("/oauth2/v1/userinfo")
+    if not resp.ok:
+        return "Failed to fetch user info", 403
+    
+    user_info = resp.json()
+    google_id = user_info["id"]
+    email = user_info["email"]
+    
+    # Find or create user
+    user = User.objects(google_id=google_id).first()
+    if not user:
+        user = User.objects(email=email).first()
+        if user:
+            # Merge existing account with Google login
+            user.google_id = google_id
+            user.save()
+        else:
+            # Generate unique username
+            base_username = user_info["email"].split("@")[0]
+            unique_username = base_username
+            counter = 1
+            
+            # Check for existing username and increment counter if needed
+            while User.objects(username=unique_username).first():
+                unique_username = f"{base_username}{counter}"
+                counter += 1
+            
+            # Create new user with guaranteed unique username
+            user = User(
+                username=unique_username,
+                email=email,
+                google_id=google_id,
+                password=None
+            )
+            user.save()
+    
+    login_user(user)
+    return redirect(url_for("posts.index"))
+
+@oauth_authorized.connect
+def google_logged_in(blueprint, token):
+    # Only handle Google blueprint events
+    if blueprint.name != "google":
+        return
+    
+    # Get fresh user info from Google
+    resp = blueprint.session.get("/oauth2/v1/userinfo")
+    if not resp.ok:
+        return
+    
+    user_info = resp.json()
+    google_id = user_info["id"]
+    
+    # Find user and update token
+    user = User.objects(google_id=google_id).first()
+    if user:
+        user.google_token = token["access_token"]
+        user.save()
+
 # TODO: implement
 @users.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for("ok.index"))
+        return redirect(url_for("posts.index"))
     
     registration_form = RegistrationForm()
 

@@ -8,9 +8,21 @@ def load_user(user_id):
     return User.objects(username=user_id).first()
 
 class User(db.Document, UserMixin):
+    meta = {
+        'indexes': [
+            {
+                'fields': ['google_id'],
+                'unique': True,
+                'sparse': True  # Allows multiple nulls
+            }
+        ]
+    }
+        
     username = StringField(required=True, unique=True, min_length=1, max_length=40)
+    google_id = StringField()
+    google_token = StringField()
     email = EmailField(required=True, unique=True)
-    password = StringField(required=True)
+    password = StringField()
     profile_pic = ImageField()
 
     def get_id(self):

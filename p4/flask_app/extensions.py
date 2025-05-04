@@ -6,3 +6,4 @@ from flask_bcrypt import Bcrypt
 db = MongoEngine()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+

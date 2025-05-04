@@ -27,11 +27,31 @@ def create_app(test_config=None):
     global post_client
     post_client = PostClient()
 
+    from flask_dance.consumer import OAuth2ConsumerBlueprint
+    google_blueprint = OAuth2ConsumerBlueprint(
+        "google",
+        __name__,
+        client_id=app.config["GOOGLE_CLIENT_ID"],
+        client_secret=app.config["GOOGLE_CLIENT_SECRET"],
+        scope=[
+            "openid",
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile"
+        ],
+        base_url="https://www.googleapis.com/",
+        authorization_url="https://accounts.google.com/o/oauth2/auth",
+        token_url="https://accounts.google.com/o/oauth2/token",
+        redirect_to="users.google_login",
+    )
+    
+
     from .users.routes import users
-    from .posts.routes import posts  # Make sure this is "posts" not "movies"
+    from .posts.routes import posts 
 
     app.register_blueprint(users)
-    app.register_blueprint(posts)  # Make sure this matches the blueprint name
+    app.register_blueprint(posts)  
+
+    app.register_blueprint(google_blueprint, url_prefix="/login")
 
     # Configure login manager
     login_manager.login_view = "users.login"

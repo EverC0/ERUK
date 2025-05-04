@@ -20,21 +20,18 @@
   </div>
   
   <!-- Posts in this category -->
-  {% if posts %}
+    {% if posts %}
     <div class="container mx-auto w-full md:w-2/3 lg:w-1/2">
       {% for post in posts %}
         <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-6">
           <div class="p-6">
             <!-- Post header with author info -->
             <div class="flex items-center mb-4">
-              {% if post.author.profile_pic %}
-                <img src="data:image/png;base64,{{ get_b64_img(post.author.username) }}" class="rounded-full h-12 w-12 object-cover mr-4" alt="Profile image">
-              {% else %}
-                <div class="rounded-full h-12 w-12 bg-gray-600 flex items-center justify-center text-white text-lg font-bold mr-4">
-                  {{ post.author.username[0]|upper }}
-                </div>
-              {% endif %}
-              
+              <!-- Default avatar always shown -->
+              <div class="rounded-full h-4 w-4 bg-gray-600 flex items-center justify-center text-white text-lg font-bold mr-3">
+                {{ post.author.username[0]|upper }}
+              </div>
+                
               <div>
                 <a href="{{ url_for('posts.user_detail', username=post.author.username) }}" class="font-medium text-blue-400 hover:text-blue-300">
                   @{{ post.author.username }}
